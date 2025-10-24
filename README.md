@@ -218,3 +218,136 @@ Settings → SSH and GPG Keys → New SSH key
 🧭 Guía de GitHub: https://docs.github.com/es/get-started
 
 🧩 Cheat Sheet de GitHub (PDF oficial): https://training.github.com/downloads/github-git-cheat-sheet.pdf
+
+GIT PULL — EXPLICACIÓN COMPLETA
+📘 ¿Qué hace exactamente git pull?
+
+git pull descarga los cambios (commits, ramas, archivos) desde el repositorio remoto y los fusiona automáticamente con tu rama local.
+
+👉 En realidad, git pull = git fetch + git merge
+
+Es decir:
+
+git fetch → descarga las actualizaciones desde GitHub.
+
+git merge → las combina con tu rama actual.
+
+🧩 Sintaxis básica
+git pull [<remote>] [<branch>]
+
+
+Por ejemplo:
+
+git pull origin main
+
+
+origin → es el nombre del remoto (GitHub por defecto).
+
+main → es la rama de la que quieres traer los cambios.
+
+💡 Ejemplo práctico
+
+Imagina que tú y un compañero trabajáis en el mismo repositorio GitHub.
+
+Tú haces cambios y los subes:
+
+git add .
+git commit -m "Añadido login"
+git push origin main
+
+
+Tu compañero hace cambios y también los sube.
+
+Antes de seguir trabajando, tú haces:
+
+git pull origin main
+
+
+🔁 Git descargará los cambios de tu compañero y los unirá con tu código.
+
+🧱 Caso 1: Sin conflictos
+
+Si no hay cambios en las mismas líneas, Git unirá automáticamente:
+
+Updating 4a6c1b2..f7a8cde
+Fast-forward
+ archivo.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+Todo correcto ✅
+
+⚠️ Caso 2: Con conflictos
+
+Si ambos modificaron las mismas líneas del mismo archivo, Git mostrará un conflicto:
+
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+
+
+Entonces deberás:
+
+Abrir el archivo conflictivo.
+
+Buscar las marcas:
+
+<<<<<<< HEAD
+versión tuya
+=======
+versión remota
+>>>>>>> origin/main
+
+
+Dejar solo la versión correcta.
+
+Guardar y hacer:
+
+git add index.html
+git commit
+
+🔍 Ver qué traerá git pull sin aplicarlo aún
+git fetch
+git log HEAD..origin/main --oneline
+
+
+Así puedes ver qué commits hay en el remoto antes de fusionar.
+
+⚙️ Configurar rama por defecto para hacer git pull sin argumentos
+
+Cuando haces el primer push:
+
+git push -u origin main
+
+
+Git “recuerda” la rama remota, así después basta con:
+
+git pull
+
+
+y se entiende como git pull origin main.
+
+🚀 Alternativa: Rebase en lugar de merge
+
+Por defecto, git pull hace un merge, lo que puede crear commits de fusión innecesarios.
+
+Puedes decirle que haga un rebase (historial más limpio):
+
+git pull --rebase origin main
+
+
+O configurarlo como predeterminado:
+
+git config --global pull.rebase true
+
+🧠 Resumen rápido
+Comando	Qué hace
+git pull	Descarga y fusiona cambios del remoto con tu rama local
+git pull origin main	Descarga desde el remoto origin la rama main
+git pull --rebase	Trae cambios reordenando tu historial
+git fetch	Solo descarga los cambios, sin aplicarlos
+git merge origin/main	Funde manualmente los cambios descargados
+🧭 Buenas prácticas
+
+✅ Siempre haz git pull antes de comenzar a trabajar (para evitar conflictos).
+✅ No edites archivos sin actualizarte primero.
+✅ Si ves conflictos, resuélvelos con calma y comprueba que el proyecto compila o ejecuta bien antes del commit.
